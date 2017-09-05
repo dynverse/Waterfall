@@ -4,8 +4,7 @@
 \alias{pseudotimeprog.foo}
 \title{Execute waterfall}
 \usage{
-pseudotimeprog.foo(x, k = 10, x.reverse = F, plot = F, color = NULL,
-  ...)
+pseudotimeprog.foo(x, k = 10, x.reverse = F)
 }
 \arguments{
 \item{x}{your data}
@@ -13,12 +12,6 @@ pseudotimeprog.foo(x, k = 10, x.reverse = F, plot = F, color = NULL,
 \item{k}{the number of clusters}
 
 \item{x.reverse}{whether or not to reverse the trajectory}
-
-\item{plot}{whether or not to plot the results}
-
-\item{color}{the colours to be used in the plot}
-
-\item{...}{extra parameters for the plot}
 }
 \description{
 Execute waterfall

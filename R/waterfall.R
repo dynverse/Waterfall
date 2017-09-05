@@ -47,15 +47,12 @@ crossvec_direction <-function(tot1,tot2,ab){
 #' @param x your data
 #' @param k the number of clusters
 #' @param x.reverse whether or not to reverse the trajectory
-#' @param plot whether or not to plot the results
-#' @param color the colours to be used in the plot
-#' @param ... extra parameters for the plot
 #'
 #' @export
 #' @importFrom stats prcomp kmeans dist
 #' @importFrom ape mst
 #' @importFrom graphics plot points segments
-pseudotimeprog.foo <- function(x, k=10, x.reverse=F, plot=F, color = NULL, ...){
+pseudotimeprog.foo <- function(x, k=10, x.reverse=F){
   r <- stats::prcomp(t(x))
   y <- r$x*matrix(r$sdev^2/sum(r$sdev^2),nrow=nrow(r$x),ncol=ncol(r$x),byrow=T)
   #y <-y[order(y[,1]),]
@@ -158,11 +155,23 @@ pseudotimeprog.foo <- function(x, k=10, x.reverse=F, plot=F, color = NULL, ...){
   pseudotime <-pseudotime-min(pseudotime)
   pseudotime <-pseudotime/pseudotime_range
 
-  if (plot) {
-    graphics::plot(pseudotime, pseudotime.y,col=paste0(color),cex=3,pch=20,bty="n", ...)
-    graphics::points(pseudotime.flow,rep(0,length(pseudotime.flow)), col="#FF0000", pch=19,cex=1)
-    graphics::segments(pseudotime.flow[1], 0, pseudotime.flow[length(pseudotime.flow)], 0, col="#FF0000" ,lwd=5)
-  }
+  df <- data.frame(y[,1:2], pseudotime, pseudotime.y)
+  attr(df, "flow") <- data.frame(PC1 = pseudotime.flow, PC2 = rep(0, length(pseudotime.flow)))
+  df
+}
 
-  return(data.frame(y[,1:2], pseudotime, pseudotime.y))
+#' Plotting the waterfall results with ggplot2
+#'
+#' @param df the output from waterfall
+#'
+#' @import ggplot2
+#' @export
+plot_waterfall <- function(df) {
+  flow <- attr(df, "flow")
+  ggplot() +
+    geom_point(aes(pseudotime, pseudotime.y, pseudotime), df, size = 5) +
+    geom_point(aes(PC1, PC2), flow, size = 2, colour = "red") +
+    geom_path(aes(PC1, PC2), flow, size = 2, colour = "red") +
+    scale_colour_distiller(palette = "RdBu") +
+    theme_classic()
 }

@@ -169,7 +169,7 @@ pseudotimeprog.foo <- function(x, k=10, x.reverse=F){
 plot_waterfall <- function(df) {
   flow <- attr(df, "flow")
   ggplot() +
-    geom_point(aes(pseudotime, pseudotime.y, pseudotime), df, size = 5) +
+    geom_point(aes(pseudotime, pseudotime.y, colour = pseudotime), df, size = 5) +
     geom_point(aes(PC1, PC2), flow, size = 2, colour = "red") +
     geom_path(aes(PC1, PC2), flow, size = 2, colour = "red") +
     scale_colour_distiller(palette = "RdBu") +
